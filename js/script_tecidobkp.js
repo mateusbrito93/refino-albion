@@ -33,6 +33,7 @@ function carregarImagens(tier, enc, totalFibra, totalTecidoAnterior) {
     return html;
 }
 
+
 async function calcular() {
     const cidadeCompra = document.getElementById('cidadeCompra').value;
     const cidadeVenda = document.getElementById('cidadeVenda').value;
@@ -304,125 +305,6 @@ async function calcular() {
         scrollParaResultados();
     }
 }
-
-async function calcularall() {
-    const cidadeCompra = document.getElementById('cidadeCompra').value;
-    const cidadeVenda = document.getElementById('cidadeVenda').value;
-    const tierSelecionado = document.getElementById('tier').value;
-    const enc = parseInt(document.getElementById('encantamento').value);
-    const quantidade = parseInt(document.getElementById('quantidade').value);
-    const taxa = parseFloat(document.getElementById('taxaImposto').value);
-    const taxaRetorno = parseFloat(document.getElementById('taxaRetorno').value);
-
-    const cidadeCompraFormatada = cidadeCompra.toLowerCase().replace(/\s/g, '');
-    const cidadeVendaFormatada = cidadeVenda.toLowerCase().replace(/\s/g, '');
-
-    const resultadoDiv = document.getElementById("resultado");
-    resultadoDiv.innerHTML = '<p class="text-center text-gray-300">Calculando...</p>';
-    iniciarBarraProgresso();
-
-    const tiersParaCalcular = tierSelecionado === "all" ? [2, 3, 4, 5, 6, 7, 8] : [parseInt(tierSelecionado)];
-
-    let resultadosHTML = `
-        <h2 class="text-2xl font-bold mb-4 text-white border-b border-gray-600 pb-2">Resultados - ${tierSelecionado === "all" ? "Todos os Tiers" : `Tier ${tierSelecionado}`}</h2>
-        <div class="mb-6 p-4 bg-gray-700 rounded-lg shadow">
-            <h3 class="text-lg font-semibold mb-3 text-yellow-400">Locais de Comércio</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
-                <p><span class="font-medium">Compra Fibra:</span> <span class="text-yellow-300">${cidadeCompra}</span></p>
-                <p><span class="font-medium">Compra Tecido:</span> <span class="text-yellow-300">${cidadeCompra}</span></p>
-                <p><span class="font-medium">Venda Tecido:</span> <span class="text-green-300">${cidadeVenda}</span></p>
-            </div>
-        </div>
-        <div class="overflow-x-auto">
-        <table class="table-auto w-full text-sm text-white border border-gray-700 rounded-lg">
-            <thead class="bg-gray-800 text-xs uppercase">
-                <tr>
-                    <th class="px-4 py-2 text-left">Tier</th>
-                    <th class="px-4 py-2">Fibra</th>
-                    <th class="px-4 py-2">Tecido Anterior</th>
-                    <th class="px-4 py-2">Tecido Refinado</th>
-                    <th class="px-4 py-2">Materiais</th>
-                    <th class="px-4 py-2">Retorno</th>
-                    <th class="px-4 py-2">Produção</th>
-                    <th class="px-4 py-2">Custo</th>
-                    <th class="px-4 py-2">Receita</th>
-                    <th class="px-4 py-2">Lucro</th>
-                    <th class="px-4 py-2">Rentabilidade</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-700">
-    `;
-
-    for (let tier of tiersParaCalcular) {
-        const fibraItem = `T${tier}_FIBER${enc > 0 ? '_LEVEL' + enc + '@' + enc : ''}`;
-        const tecidoAnteriorItem = tier > 2 ? `T${tier - 1}_CLOTH${(tier - 1 >= 4 && enc > 0) ? '_LEVEL' + enc + '@' + enc : ''}` : null;
-        const tecidoAtualItem = `T${tier}_CLOTH${enc > 0 ? '_LEVEL' + enc + '@' + enc : ''}`;
-
-        const urlFibra = `https://west.albion-online-data.com/api/v2/stats/prices/${fibraItem}.json?locations=${cidadeCompraFormatada}`;
-        const urlTecidoAnterior = tecidoAnteriorItem ? `https://west.albion-online-data.com/api/v2/stats/prices/${tecidoAnteriorItem}.json?locations=${cidadeCompraFormatada}` : null;
-        const urlTecidoAtual = `https://west.albion-online-data.com/api/v2/stats/prices/${tecidoAtualItem}.json?locations=${cidadeVendaFormatada}`;
-
-        const [resFibra, resTecidoAnt, resTecidoAtual] = await Promise.all([
-            fetch(urlFibra),
-            urlTecidoAnterior ? fetch(urlTecidoAnterior) : Promise.resolve(null),
-            fetch(urlTecidoAtual)
-        ]);
-
-        const [dadosFibra, dadosTecidoAnt, dadosTecidoAtual] = await Promise.all([
-            resFibra.json(),
-            resTecidoAnt ? resTecidoAnt.json() : Promise.resolve(null),
-            resTecidoAtual.json()
-        ]);
-
-        const fibra = dadosFibra.find(d => d.item_id === fibraItem);
-        const tecidoAnterior = tecidoAnteriorItem ? dadosTecidoAnt?.find(d => d.item_id === tecidoAnteriorItem) : null;
-        const tecidoAtual = dadosTecidoAtual.find(d => d.item_id === tecidoAtualItem);
-
-        if (!fibra?.sell_price_min || !tecidoAtual?.sell_price_min || (tier > 2 && !tecidoAnterior?.sell_price_min)) continue;
-
-        const precoFibra = fibra.sell_price_min;
-        const precoTecido = tecidoAnterior?.sell_price_min || 0;
-        const precoVenda = tecidoAtual.sell_price_min;
-
-        const fibrasPorTecido = { 2: 1, 3: 2, 4: 2, 5: 3, 6: 4, 7: 5, 8: 5 };
-        const tecidosAnteriores = { 2: 0, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1 };
-
-        const totalFibra = fibrasPorTecido[tier] * quantidade;
-        const totalTecidoAnterior = tecidosAnteriores[tier] * quantidade;
-        const tecidosRetornados = quantidade * (taxaRetorno / (100 - taxaRetorno));
-        const producaoTotal = quantidade + tecidosRetornados;
-
-        const custoFibra = totalFibra * precoFibra;
-        const custoTecidoAnterior = totalTecidoAnterior * precoTecido;
-        const custoTotal = custoFibra + custoTecidoAnterior + taxa;
-
-        const receita = producaoTotal * precoVenda;
-        const lucro = receita - custoTotal;
-        const rentabilidade = custoTotal > 0 ? ((lucro / custoTotal) * 100).toFixed(2) : "0.00";
-
-        resultadosHTML += `
-        <tr>
-            <td class="px-4 py-2 font-bold">T${tier}</td>
-            <td class="px-4 py-2">${totalFibra} x $${formatarValor(precoFibra)}</td>
-            <td class="px-4 py-2">${tier > 2 ? totalTecidoAnterior + ' x $' + formatarValor(precoTecido) : '-'}</td>
-            <td class="px-4 py-2">${quantidade} x $${formatarValor(precoVenda)}</td>
-            <td class="px-4 py-2">${totalFibra + (tier > 2 ? totalTecidoAnterior : 0)}</td>
-            <td class="px-4 py-2">${Math.floor(tecidosRetornados)}</td>
-            <td class="px-4 py-2">${producaoTotal.toFixed(2)}</td>
-            <td class="px-4 py-2">$${formatarValor(custoTotal)}</td>
-            <td class="px-4 py-2">$${formatarValor(receita)}</td>
-            <td class="px-4 py-2 ${lucro >= 0 ? 'text-green-500' : 'text-red-500'}">$${formatarValor(lucro)}</td>
-            <td class="px-4 py-2 ${rentabilidade >= 0 ? 'text-green-500' : 'text-red-500'}">${rentabilidade}%</td>
-        </tr>
-        `;
-    }
-
-    resultadosHTML += `</tbody></table></div>`;
-    finalizarBarraProgresso();
-    resultadoDiv.innerHTML = resultadosHTML;
-    scrollParaResultados();
-}
-
 
 function scrollParaResultados() {
     const elementoResultados = document.getElementById("resultado");
