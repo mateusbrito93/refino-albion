@@ -1,0 +1,265 @@
+body {
+  background-color: #111827;
+  color: #f3f4f6;
+  font-family: 'Inter', sans-serif;
+}
+
+input, select, button {
+  background-color: #1f2937;
+  color: #f3f4f6;
+  border-color: #4b5563;
+}
+
+.card {
+  background-color: #1f2937;
+}
+
+table thead {
+  background-color: #374151;
+}
+
+table tbody tr:nth-child(odd) {
+  background-color: #1f2937;
+}
+
+table tbody tr:nth-child(even) {
+  background-color: #111827;
+}
+
+.text-green-600 {
+  color: #10b981;
+}
+
+.text-red-600 {
+  color: #ef4444;
+}
+
+img {
+  transition: transform 0.3s ease;
+}
+
+img:hover {
+  transform: scale(1.1);
+}
+
+.bg-gray-700 {
+  transition: all 0.3s ease;
+}
+
+.bg-gray-700:hover {
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+}
+
+.text-yellow-400 {
+  color: #facc15;
+}
+
+.text-green-400 {
+  color: #4ade80;
+}
+
+.trade-city {
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.trade-city-buy {
+  background-color: #1e3a8a;
+  color: #93c5fd;
+}
+
+.trade-city-sell {
+  background-color: #166534;
+  color: #86efac;
+}
+
+/* Novos estilos adicionados */
+.shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.hover\:shadow-xl:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.transition-shadow {
+  transition-property: box-shadow;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.text-blue-300 {
+  color: #93c5fd;
+}
+
+.text-green-300 {
+  color: #6ee7b7;
+}
+
+.text-yellow-300 {
+  color: #fde047;
+}
+
+.text-purple-300 {
+  color: #d8b4fe;
+}
+
+/* Estilos para o rodapé */
+footer {
+  background-color: #111827;
+  transition: all 0.3s ease;
+}
+
+footer:hover {
+  color: #e5e7eb;
+}
+
+.min-h-screen {
+  min-height: 100vh;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+
+.navbar {
+  background-color: #1f2937;
+  transition: all 0.3s ease;
+}
+
+.navbar a {
+  transition: color 0.2s ease;
+}
+
+.navbar a:hover {
+  color: #60a5fa;
+}
+
+#barra-progresso {
+  transition: width 0.4s ease, opacity 0.3s ease;
+}
+
+/* Tema claro */
+html.light {
+  background-color: #f9fafb;
+  color: #1f2937;
+}
+
+html.light body {
+  background-color: #f9fafb;
+  color: #1f2937;
+}
+
+html.light input,
+html.light select,
+html.light button {
+  background-color: #f3f4f6;
+  color: #1f2937;
+  border-color: #cbd5e1;
+}
+
+html.light .bg-gray-700,
+html.light .bg-gray-800,
+html.light .bg-gray-900 {
+  background-color: #e5e7eb;
+}
+
+html.light .text-white {
+  color: #111827 !important;
+}
+
+html.light .text-gray-300,
+html.light .text-gray-400 {
+  color: #4b5563 !important;
+}
+
+html.light .border-gray-600,
+html.light .border-gray-700 {
+  border-color: #e5e7eb;
+}
+
+html.light table thead {
+  background-color: #f3f4f6;
+}
+
+html.light table tbody tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+html.light table tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+html.light footer {
+  background-color: #e5e7eb;
+  color: #1f2937;
+}
+
+/* Switch base */
+.theme-switch {
+  position: relative;
+  justify-content: flex-start;
+}
+
+/* Ícone da alavanca (padrão: Lua escura)
+.theme-switch .switch-handle::before {
+  content: "🌙";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 14px;
+  color: #1f2937; /* Cor escura (Tailwind gray-800) 
+}*/
+
+/* Quando em modo claro: Sol amarelo
+html.light .theme-switch .switch-handle::before {
+  content: "☀️";
+  color: #facc15; /* Amarelo (Tailwind yellow-400)
+}*/
+
+/* Modo claro ativo */
+html.light .theme-switch {
+  justify-content: flex-end;
+  background-color: #e5e7eb;
+  border-color: #d1d5db;
+}
+
+/* Centraliza o ícone e remove estilo antigo */
+.theme-switch .switch-handle i {
+  pointer-events: none;
+}
+
+/* Modo claro: sol amarelo */
+html.light #theme-icon {
+  color: #facc15; /* amarelo */
+}
+
+/*html.light #theme-icon::before {
+  content: "\f185"; /* fa-sun 
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+}*/
+
+/* Modo escuro: lua escura */
+:not(html.light) #theme-icon {
+  color: #1f2937; /* cinza escuro */
+}
+
+/*:not(html.light) #theme-icon::before {
+  content: "\f186"; /* fa-moon
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+}*/
+
+.btn-voltar {
+  background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+  border: 1px solid #4a5568;
+  transition: all 0.3s ease;
+}
+
+.btn-voltar:hover {
+  transform: translateX(-3px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}

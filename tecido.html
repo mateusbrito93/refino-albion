@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Refino de Fibras - Albion Online</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style2.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Favicon padrão -->
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon.png">
+    <link rel="shortcut icon" href="assets/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon.png">
+    <link rel="manifest" href="site.webmanifest">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+
+<body class="p-6 font-sans min-h-screen">
+    <div id="pageTransition" class="page-transition">
+        <span class="loader"></span>
+    </div>
+    <!-- Cabeçalho fixo -->
+    <header class="navbar sticky top-0 z-50 bg-gray-900 text-white shadow-md py-4 px-6 mb-10">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold flex items-center">
+                <i class="fas fa-scroll mr-2 text-yellow-300"></i> <a href="index.html">Refino Albion</a>
+            </h1>
+            <a href="https://www.linkedin.com/in/mateus-brito-071b1366/" target="_blank"
+                class="text-blue-300 hover:text-blue-500 text-sm">
+                Mateus Brito
+            </a>
+            <div id="toggle-theme"
+                class="theme-switch cursor-pointer w-14 h-8 rounded-full flex items-center px-1 transition duration-300 border border-gray-400 bg-gray-700">
+                <div
+                    class="switch-handle w-6 h-6 bg-white rounded-full transition-transform duration-300 transform flex items-center justify-center">
+                    <i id="theme-icon" class="fas fa-moon text-gray-900 text-sm"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="max-w-6xl mx-auto mb-6 px-4">
+        <button onclick="navegarPara('index.html')"
+            class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center">
+            <i class="fas fa-arrow-left mr-2"></i> Voltar
+        </button>
+    </div>
+    <!-- Barra de progresso -->
+    <div id="barra-progresso" class="fixed top-0 left-0 w-0 h-1 bg-blue-500 z-50 transition-all duration-300 ease-out">
+    </div>
+    <main class="max-w-6xl mx-auto">
+        <h2 class="text-3xl font-bold text-white mb-6">
+            <i class="fas fa-calculator mr-2"></i>Calculadora de Refino - Fibras
+        </h2>
+
+        <div class="bg-gray-800 shadow-xl rounded-lg p-8 mb-8">
+            <div id="form-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            </div>
+        </div>
+
+        <div id="resultado" class="bg-gray-800 rounded-lg p-6 shadow-xl"></div>
+        </div>
+        </div>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="mt-8 py-4 border-t border-gray-700 text-center text-gray-400">
+        <div class="max-w-6xl mx-auto px-4">
+            <p class="text-sm">© 2025 Calculadora de Refino - Albion Online. Todos os direitos reservados.</p>
+            <p class="text-xs mt-1">
+                Desenvolvido por <span class="text-blue-300"><a href="https://www.linkedin.com/in/mateus-brito-071b1366/"
+                        target="_blank">Mateus
+                        Brito</a></span>
+            </p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script src="js/form-builder.js"></script>
+</body>
+
+</html>

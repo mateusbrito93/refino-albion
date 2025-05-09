@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seleção de Refino - Albion Online</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/style2.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+
+<body class="p-6 font-sans min-h-screen bg-gray-900 text-white">
+  <div id="pageTransition" class="page-transition">
+    <span class="loader"></span>
+  </div>
+  <!-- Cabeçalho fixo -->
+  <header class="navbar sticky top-0 z-50 bg-gray-800 text-white shadow-md py-4 px-6 mb-10">
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
+      <h1 class="text-xl font-bold flex items-center">
+        <i class="fas fa-industry mr-2 text-yellow-300"></i> Refino Albion
+      </h1>
+      <a href="https://www.linkedin.com/in/mateus-brito-071b1366/" target="_blank" class="text-blue-300 hover:text-blue-500 text-sm">
+        Mateus Brito
+      </a>
+    </div>
+  </header>
+
+  <div id="contentWrapper" class="content-wrapper">
+    <main class="max-w-6xl mx-auto">
+      <h2 class="text-3xl font-bold text-center mb-10">
+        <i class="fas fa-chess-queen mr-2"></i>Selecione o Tipo de Refino
+      </h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Card Minério -->
+        <div class="card-refino bg-gray-800 rounded-xl p-6 shadow-lg transition-all duration-300 cursor-pointer"
+          onclick="redirecionar('#')">
+          <div class="flex flex-col items-center text-center">
+            <img src="img/minerio.png" alt="Minério" class="h-24 mb-4">
+            <h3 class="text-xl font-bold mb-2 text-blue-300">Refino de Minério</h3>
+            <p class="text-gray-400">Calculadora para refino de metais e barras</p>
+          </div>
+        </div>
+
+        <!-- Card Pelego -->
+        <div class="card-refino bg-gray-800 rounded-xl p-6 shadow-lg transition-all duration-300 cursor-pointer"
+          onclick="redirecionar('#')">
+          <div class="flex flex-col items-center text-center">
+            <img src="img/pelego.png" alt="Pelego" class="h-24 mb-4">
+            <h3 class="text-xl font-bold mb-2 text-orange-300">Refino de Pelego</h3>
+            <p class="text-gray-400">Calculadora para refino de couros e peles</p>
+          </div>
+        </div>
+
+        <!-- Card Tecido -->
+        <div class="card-refino bg-gray-800 rounded-xl p-6 shadow-lg transition-all duration-300 cursor-pointer"
+          onclick="redirecionar('tecido')">
+          <div class="flex flex-col items-center text-center">
+            <img src="img/tecido.png" alt="Tecido" class="h-24 mb-4">
+            <h3 class="text-xl font-bold mb-2 text-purple-300">Refino de Tecido</h3>
+            <p class="text-gray-400">Calculadora para refino de fibras e tecidos</p>
+          </div>
+        </div>
+
+        <!-- Card Madeira -->
+        <div class="card-refino bg-gray-800 rounded-xl p-6 shadow-lg transition-all duration-300 cursor-pointer"
+          onclick="redirecionar('#')">
+          <div class="flex flex-col items-center text-center">
+            <img src="img/madeira.png" alt="Madeira" class="h-24 mb-4">
+            <h3 class="text-xl font-bold mb-2 text-green-300">Refino de Madeira</h3>
+            <p class="text-gray-400">Calculadora para refino de madeiras e tábuas</p>
+          </div>
+        </div>
+
+        <!-- Card Pedra -->
+        <div class="card-refino bg-gray-800 rounded-xl p-6 shadow-lg transition-all duration-300 cursor-pointer"
+          onclick="redirecionar('#')">
+          <div class="flex flex-col items-center text-center">
+            <img src="img/pedra.png" alt="Pedra" class="h-24 mb-4">
+            <h3 class="text-xl font-bold mb-2 text-gray-300">Refino de Pedra</h3>
+            <p class="text-gray-400">Calculadora para refino de pedras e blocos</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Rodapé -->
+  <footer class="mt-12 py-4 border-t border-gray-700 text-center text-gray-400">
+    <div class="max-w-6xl mx-auto px-4">
+      <p class="text-sm">© 2025 Calculadora de Refino - Albion Online. Todos os direitos reservados.</p>
+      <p class="text-xs mt-1">
+        Desenvolvido por <span class="text-blue-300"><a href="https://www.linkedin.com/in/mateus-brito-071b1366/"
+            target="_blank">Mateus Brito</a></span>
+      </p>
+    </div>
+  </footer>
+
+  <script src="js/script_index.js"></script>
+</body>
+
+</html>
