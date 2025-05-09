@@ -7,8 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
       label: "Tier",
       tipo: "select",
       id: "tier",
-      options: ["T2", "T3", "T4", "T5", "T6", "T7", "T8"],
-      values: [2, 3, 4, 5, 6, 7, 8],
+      options: ["T2", "T3", "T4", "T5", "T6", "T7", "T8", "Todos (BETA)"],
+      values: [2, 3, 4, 5, 6, 7, 8, "all"],
       selected: 2 // Tier T2 selecionado por padrão
     },
     {
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Adiciona todas as opções para outros tiers
       const options = ["Sem encantamento", "1", "2", "3", "4"];
       const values = [0, 1, 2, 3, 4];
-      
+
       options.forEach((text, index) => {
         const option = document.createElement("option");
         option.value = values[index];
@@ -130,14 +130,21 @@ document.addEventListener("DOMContentLoaded", () => {
   const tierInicial = parseInt(document.getElementById("tier").value);
   atualizarEncantamentos(tierInicial);
 
-  // Botão de calcular
+  // Botão de calcular único
   const buttonDiv = document.createElement("div");
   buttonDiv.className = "flex items-end"; // Alinha o botão na parte inferior
 
   const button = document.createElement("button");
-  button.className = "w-full bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition-colors";
+  button.className = "w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors";
   button.innerHTML = '<i class="fas fa-calculator mr-2"></i> Calcular';
-  button.onclick = calcular;
+  button.onclick = () => {
+    const tier = document.getElementById('tier').value;
+    if (tier === "all") {
+      calcularall();
+    } else {
+      calcular();
+    }
+  };
 
   buttonDiv.appendChild(button);
 

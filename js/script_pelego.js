@@ -306,6 +306,124 @@ async function calcular() {
     }
 }
 
+async function calcularall() {
+    const cidadeCompra = document.getElementById('cidadeCompra').value;
+    const cidadeVenda = document.getElementById('cidadeVenda').value;
+    const tierSelecionado = document.getElementById('tier').value;
+    const enc = parseInt(document.getElementById('encantamento').value);
+    const quantidade = parseInt(document.getElementById('quantidade').value);
+    const taxa = parseFloat(document.getElementById('taxaImposto').value);
+    const taxaRetorno = parseFloat(document.getElementById('taxaRetorno').value);
+
+    const cidadeCompraFormatada = cidadeCompra.toLowerCase().replace(/\s/g, '');
+    const cidadeVendaFormatada = cidadeVenda.toLowerCase().replace(/\s/g, '');
+
+    const resultadoDiv = document.getElementById("resultado");
+    resultadoDiv.innerHTML = '<p class="text-center text-gray-300">Calculando...</p>';
+    iniciarBarraProgresso();
+
+    const tiersParaCalcular = tierSelecionado === "all" ? [2, 3, 4, 5, 6, 7, 8] : [parseInt(tierSelecionado)];
+
+    let resultadosHTML = `
+        <h2 class="text-2xl font-bold mb-4 text-white border-b border-gray-600 pb-2">Resultados - ${tierSelecionado === "all" ? "Todos os Tiers" : `Tier ${tierSelecionado}`}</h2>
+        <div class="mb-6 p-4 bg-gray-700 rounded-lg shadow">
+            <h3 class="text-lg font-semibold mb-3 text-yellow-400">Locais de Comércio</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                <p><span class="font-medium">Compra Pelego:</span> <span class="text-yellow-300">${cidadeCompra}</span></p>
+                <p><span class="font-medium">Compra Couro:</span> <span class="text-yellow-300">${cidadeCompra}</span></p>
+                <p><span class="font-medium">Venda Couro:</span> <span class="text-green-300">${cidadeVenda}</span></p>
+            </div>
+        </div>
+        <div class="overflow-x-auto">
+        <table class="table-auto w-full text-sm text-white border border-gray-700 rounded-lg">
+            <thead class="bg-gray-800 text-xs uppercase">
+                <tr>
+                    <th class="px-4 py-2 text-left">Tier</th>
+                    <th class="px-4 py-2">Pelego</th>
+                    <th class="px-4 py-2">Couro Anterior</th>
+                    <th class="px-4 py-2">Couro Refinado</th>
+                    <th class="px-4 py-2">Materiais</th>
+                    <th class="px-4 py-2">Retorno</th>
+                    <th class="px-4 py-2">Produção</th>
+                    <th class="px-4 py-2">Custo</th>
+                    <th class="px-4 py-2">Receita</th>
+                    <th class="px-4 py-2">Lucro</th>
+                    <th class="px-4 py-2">Rentabilidade</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-700">
+    `;
+
+    for (let tier of tiersParaCalcular) {
+        const pelegoItem = `T${tier}_HIDE${enc > 0 ? '_LEVEL' + enc + '@' + enc : ''}`;
+        const couroAnteriorItem = tier > 2 ? `T${tier - 1}_LEATHER${(tier - 1 >= 4 && enc > 0) ? '_LEVEL' + enc + '@' + enc : ''}` : null;
+        const couroAtualItem = `T${tier}_LEATHER${enc > 0 ? '_LEVEL' + enc + '@' + enc : ''}`;
+
+        const urlPelego = `https://west.albion-online-data.com/api/v2/stats/prices/${pelegoItem}.json?locations=${cidadeCompraFormatada}`;
+        const urlCouroAnterior = couroAnteriorItem ? `https://west.albion-online-data.com/api/v2/stats/prices/${couroAnteriorItem}.json?locations=${cidadeCompraFormatada}` : null;
+        const urlCouroAtual = `https://west.albion-online-data.com/api/v2/stats/prices/${couroAtualItem}.json?locations=${cidadeVendaFormatada}`;
+
+        const [resPelego, resCouroAnt, resCouroAtual] = await Promise.all([
+            fetch(urlPelego),
+            urlCouroAnterior ? fetch(urlCouroAnterior) : Promise.resolve(null),
+            fetch(urlCouroAtual)
+        ]);
+
+        const [dadosPelego, dadosCouroAnt, dadosCouroAtual] = await Promise.all([
+            resPelego.json(),
+            resCouroAnt ? resCouroAnt.json() : Promise.resolve(null),
+            resCouroAtual.json()
+        ]);
+
+        const pelego = dadosPelego.find(d => d.item_id === pelegoItem);
+        const couroAnterior = couroAnteriorItem ? dadosCouroAnt?.find(d => d.item_id === couroAnteriorItem) : null;
+        const couroAtual = dadosCouroAtual.find(d => d.item_id === couroAtualItem);
+
+        if (!pelego?.sell_price_min || !couroAtual?.sell_price_min || (tier > 2 && !couroAnterior?.sell_price_min)) continue;
+
+        const precoPelego = pelego.sell_price_min;
+        const precoCouro = couroAnterior?.sell_price_min || 0;
+        const precoVenda = couroAtual.sell_price_min;
+
+        const pelegosPorCouro = { 2: 1, 3: 2, 4: 2, 5: 3, 6: 4, 7: 5, 8: 5 };
+        const courosAnteriores = { 2: 0, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1 };
+
+        const totalPelego = pelegosPorCouro[tier] * quantidade;
+        const totalCouroAnterior = courosAnteriores[tier] * quantidade;
+        const courosRetornados = quantidade * (taxaRetorno / (100 - taxaRetorno));
+        const producaoTotal = quantidade + courosRetornados;
+
+        const custoPelego = totalPelego * precoPelego;
+        const custoCouroAnterior = totalCouroAnterior * precoCouro;
+        const custoTotal = custoPelego + custoCouroAnterior + taxa;
+
+        const receita = producaoTotal * precoVenda;
+        const lucro = receita - custoTotal;
+        const rentabilidade = custoTotal > 0 ? ((lucro / custoTotal) * 100).toFixed(2) : "0.00";
+
+        resultadosHTML += `
+        <tr>
+            <td class="px-4 py-2 font-bold">T${tier}</td>
+            <td class="px-4 py-2">${totalPelego} x $${formatarValor(precoPelego)}</td>
+            <td class="px-4 py-2">${tier > 2 ? totalCouroAnterior + ' x $' + formatarValor(precoCouro) : '-'}</td>
+            <td class="px-4 py-2">${quantidade} x $${formatarValor(precoVenda)}</td>
+            <td class="px-4 py-2">${totalPelego + (tier > 2 ? totalCouroAnterior : 0)}</td>
+            <td class="px-4 py-2">${Math.floor(courosRetornados)}</td>
+            <td class="px-4 py-2">${producaoTotal.toFixed(2)}</td>
+            <td class="px-4 py-2">$${formatarValor(custoTotal)}</td>
+            <td class="px-4 py-2">$${formatarValor(receita)}</td>
+            <td class="px-4 py-2 ${lucro >= 0 ? 'text-green-500' : 'text-red-500'}">$${formatarValor(lucro)}</td>
+            <td class="px-4 py-2 ${rentabilidade >= 0 ? 'text-green-500' : 'text-red-500'}">${rentabilidade}%</td>
+        </tr>
+        `;
+    }
+
+    resultadosHTML += `</tbody></table></div>`;
+    finalizarBarraProgresso();
+    resultadoDiv.innerHTML = resultadosHTML;
+    scrollParaResultados();
+}
+
 function scrollParaResultados() {
     const elementoResultados = document.getElementById("resultado");
     if (elementoResultados) {
