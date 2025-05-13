@@ -20,13 +20,13 @@ document.addEventListener("DOMContentLoaded", () => {
       label: "Cidade de Compra (Pelego)",
       tipo: "select",
       id: "cidadeCompra",
-      options: ["Bridgewatch", "Fort Sterling", "Lymhurst", "Martlock", "Thetford", "Caerleon"]
+      options: ["Bridgewatch", "Fort Sterling", "Lymhurst", "Martlock", "Thetford", "Caerleon", "Brecilien"]
     },
     {
       label: "Cidade de Venda (Couro)",
       tipo: "select",
       id: "cidadeVenda",
-      options: ["Bridgewatch", "Fort Sterling", "Lymhurst", "Martlock", "Thetford", "Caerleon"]
+      options: ["Bridgewatch", "Fort Sterling", "Lymhurst", "Martlock", "Thetford", "Caerleon", "Brecilien"]
     },
     {
       label: "Quantidade",
