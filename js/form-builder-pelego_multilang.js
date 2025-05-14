@@ -59,11 +59,11 @@ function buildFormWithLang(t) {
     if (tier === 2 || tier === 3) {
       const option = document.createElement("option");
       option.value = 0;
-      option.textContent = "Sem encantamento";
+      option.textContent = "0";
       option.selected = true;
       encantamentoSelect.appendChild(option);
     } else {
-      const options = ["Sem encantamento", "1", "2", "3", "4"];
+      const options = ["0", "1", "2", "3", "4"];
       const values = [0, 1, 2, 3, 4];
 
       options.forEach((text, index) => {
