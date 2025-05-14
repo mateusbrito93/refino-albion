@@ -2,6 +2,7 @@ const translations = {
     pt: {
         title: "Refino Albion",
         titulo: "Selecione o Tipo de Refino",
+        titulopelego: "Calculadora de Refino - Pelegos",
         minerio: "Refino de Minério",
         pelego: "Refino de Pelego",
         tecido: "Refino de Tecido",
@@ -19,6 +20,7 @@ const translations = {
     en: {
         title: "Albion Refinement",
         titulo: "Select Refining Type",
+        titulopelego: "Refining Calculator - Leathers",
         minerio: "Ore Refining",
         pelego: "Leather Refining",
         tecido: "Cloth Refining",
@@ -27,15 +29,16 @@ const translations = {
         outros: "Other Refinements",
         mineriodesc: "Calculator for refining metals and bars",
         pelegodesc: "Calculator for refining leather and hides",
-        tecidodesc: "Refino de Tecido",
-        madeiradesc: "Refino de Madeira",
-        pedradesc: "Refino de Pedra",
-        outrosdesc: "Outros Refinos",
+        tecidodesc: "Calculator for refining fibers and clothes",
+        madeiradesc: "Calculator for refining wood and boards",
+        pedradesc: "Calculator for stone and blocks",
+        outrosdesc: "Other Refinements",
         copyright: "© 2025 Refining Calculator - Albion Online. All rights reserved."
     },
     es: {
         title: "Refinamiento de Albion",
         titulo: "Seleccionar el tipo de refinación",
+        titulopelego: "Calculadora de refinación - Cuero",
         minerio: "Refinación de minerales",
         pelego: "Refinación del cuero",
         tecido: "Refinación de tejidos",
@@ -44,10 +47,10 @@ const translations = {
         outros: "Otros refinamientos",
         mineriodesc: "Calculadora para refinar metales y barras",
         pelegodesc: "Calculadora para refinar cueros y pieles",
-        tecidodesc: "Refino de Tecido",
-        madeiradesc: "Refino de Madeira",
-        pedradesc: "Refino de Pedra",
-        outrosdesc: "Outros Refinos",
+        tecidodesc: "Calculadora para refinar fibras y tejidos",
+        madeiradesc: "Calculadora para refinar madera y tableros",
+        pedradesc: "Calculadora de refinación de piedras y bloques",
+        outrosdesc: "Otros refinamientos",
         copyright: "© 2025 Calculadora de refinación - Albion Online. Reservados todos los derechos."
     }
 };
@@ -55,6 +58,7 @@ const translations = {
 const langButtons = document.querySelectorAll(".language-selector img");
 const title = document.getElementById("title");
 const titulo = document.getElementById("titulo");
+const titulopelego = document.getElementById("titulopelego");
 const minerio = document.getElementById("minerio");
 const pelego = document.getElementById("pelego");
 const tecido = document.getElementById("tecido");
@@ -77,21 +81,22 @@ function updateLanguage(lang) {
     return;
   }
 
-  title.textContent = translation.title;
-  titulo.textContent = translation.titulo;
-  minerio.textContent = translation.minerio;
-  pelego.textContent = translation.pelego;
-  tecido.textContent = translation.tecido;
-  madeira.textContent = translation.madeira;
-  pedra.textContent = translation.pedra;
-  outros.textContent = translation.outros;
-  mineriodesc.textContent = translation.mineriodesc;
-  pelegodesc.textContent = translation.pelegodesc;
-  tecidodesc.textContent = translation.tecidodesc;
-  madeiradesc.textContent = translation.madeiradesc;
-  pedradesc.textContent = translation.pedradesc;
-  outrosdesc.textContent = translation.outrosdesc;
-  copyright.textContent = translation.copyright;
+  if (title) title.textContent = translation.title;
+  if (titulo) titulo.textContent = translation.titulo;
+  if (titulopelego) titulopelego.textContent = translation.titulopelego;
+  if (minerio) minerio.textContent = translation.minerio;
+  if (pelego) pelego.textContent = translation.pelego;
+  if (tecido) tecido.textContent = translation.tecido;
+  if (madeira) madeira.textContent = translation.madeira;
+  if (pedra) pedra.textContent = translation.pedra;
+  if (outros) outros.textContent = translation.outros;
+  if (mineriodesc) mineriodesc.textContent = translation.mineriodesc;
+  if (pelegodesc) pelegodesc.textContent = translation.pelegodesc;
+  if (tecidodesc) tecidodesc.textContent = translation.tecidodesc;
+  if (madeiradesc) madeiradesc.textContent = translation.madeiradesc;
+  if (pedradesc) pedradesc.textContent = translation.pedradesc;
+  if (outrosdesc) outrosdesc.textContent = translation.outrosdesc;
+  if (copyright) copyright.textContent = translation.copyright;
 }
 
 

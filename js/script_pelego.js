@@ -502,7 +502,8 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener('DOMContentLoaded', () => {
     // Anima a entrada do conteúdo
     setTimeout(() => {
-        document.getElementById('contentWrapper').style.opacity = '1';
+        const wrapper = document.getElementById('contentWrapper');
+        if (wrapper) wrapper.style.opacity = '1';
     }, 50);
 
     // Modifique todos os links para usar o sistema de transição
