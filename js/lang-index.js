@@ -3,6 +3,7 @@ const translations = {
         title: "Refino Albion",
         titulo: "Selecione o Tipo de Refino",
         titulopelego: "Calculadora de Refino - Pelegos",
+        titulotecido: "Calculadora de Refino - Fibras",
         minerio: "Refino de Minério",
         pelego: "Refino de Pelego",
         tecido: "Refino de Tecido",
@@ -21,6 +22,7 @@ const translations = {
         title: "Albion Refinement",
         titulo: "Select Refining Type",
         titulopelego: "Refining Calculator - Leathers",
+        titulotecido: "Refining Calculator - Fibers",
         minerio: "Ore Refining",
         pelego: "Leather Refining",
         tecido: "Cloth Refining",
@@ -39,6 +41,7 @@ const translations = {
         title: "Refinamiento de Albion",
         titulo: "Seleccionar el tipo de refinación",
         titulopelego: "Calculadora de refinación - Cuero",
+        titulotecido: "Calculadora de refinación - Fibras",
         minerio: "Refinación de minerales",
         pelego: "Refinación del cuero",
         tecido: "Refinación de tejidos",
@@ -59,6 +62,7 @@ const langButtons = document.querySelectorAll(".language-selector img");
 const title = document.getElementById("title");
 const titulo = document.getElementById("titulo");
 const titulopelego = document.getElementById("titulopelego");
+const titulotecido = document.getElementById("titulotecido");
 const minerio = document.getElementById("minerio");
 const pelego = document.getElementById("pelego");
 const tecido = document.getElementById("tecido");
@@ -84,6 +88,7 @@ function updateLanguage(lang) {
   if (title) title.textContent = translation.title;
   if (titulo) titulo.textContent = translation.titulo;
   if (titulopelego) titulopelego.textContent = translation.titulopelego;
+  if (titulotecido) titulotecido.textContent = translation.titulotecido;
   if (minerio) minerio.textContent = translation.minerio;
   if (pelego) pelego.textContent = translation.pelego;
   if (tecido) tecido.textContent = translation.tecido;
@@ -110,46 +115,6 @@ langButtons.forEach(btn => {
 
 // Idioma padrão
 updateLanguage("pt");
-
-
-const formTranslations = {
-  pt: {
-    tier: "Tier",
-    encantamento: "Encantamento",
-    cidadeCompra: "Cidade de Compra (Pelego)",
-    cidadeVenda: "Cidade de Venda (Couro)",
-    quantidade: "Quantidade",
-    taxaImposto: "Taxa de Imposto (Fee)",
-    taxaRetorno: "Taxa de Retorno (%)",
-    calcular: "Calcular"
-  },
-  en: {
-    tier: "Tier",
-    encantamento: "Enchantment",
-    cidadeCompra: "Purchase City (Hide)",
-    cidadeVenda: "Sell City (Leather)",
-    quantidade: "Amount",
-    taxaImposto: "Tax (Fee)",
-    taxaRetorno: "Return Rate (%)",
-    calcular: "Calculate"
-  },
-  es: {
-    tier: "Tier",
-    encantamento: "Encantamiento",
-    cidadeCompra: "Ciudad de Compra (Cuero)",
-    cidadeVenda: "Ciudad de Venta (Cuero)",
-    quantidade: "Cantidad",
-    taxaImposto: "Tasa de Impuesto (Fee)",
-    taxaRetorno: "Tasa de Retorno (%)",
-    calcular: "Calcular"
-  }
-};
-
-function rebuildForm(lang = 'pt') {
-  if (typeof buildFormWithLang === 'function') {
-    buildFormWithLang(formTranslations[lang]);
-  }
-}
 
 // Atualizar formulário ao trocar idioma
 langButtons.forEach(btn => {

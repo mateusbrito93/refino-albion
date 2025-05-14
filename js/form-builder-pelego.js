@@ -11,7 +11,7 @@ function buildFormWithLang(t) {
       id: "tier",
       options: ["T2", "T3", "T4", "T5", "T6", "T7", "T8", "Todos (BETA)"],
       values: [2, 3, 4, 5, 6, 7, 8, "all"],
-      selected: 2 // Tier T2 selecionado por padrão
+      selected: 2
     },
     {
       label: t.encantamento,
