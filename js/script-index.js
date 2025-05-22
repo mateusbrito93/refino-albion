@@ -79,8 +79,9 @@ async function navegarPara(pageName) {
         }, 50);
 
     } catch (error) {
+        // window.location.href = `/${pageName}`; // Fallback
         console.error('Erro ao carregar a página:', error);
-        window.location.href = `/${pageName}`; // Fallback para carregamento completo
+        // Exibe erro na tela ou carrega um conteúdo de erro personalizado se quiser
     }
 }
 window.navegarParaGlobal = navegarPara; // Expor globalmente
