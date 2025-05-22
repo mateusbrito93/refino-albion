@@ -1,3 +1,6 @@
+// Expor globalmente a função navegarPara
+window.navegarParaGlobal = navegarPara;
+
 // No início do arquivo js/script-index.js ou onde 'navegarPara' é definida
 async function navegarPara(pageName) {
     const transition = document.getElementById('pageTransition');
@@ -84,8 +87,6 @@ async function navegarPara(pageName) {
         // Exibe erro na tela ou carrega um conteúdo de erro personalizado se quiser
     }
 }
-// Expor globalmente a função navegarPara
-window.navegarParaGlobal = navegarPara;
 
 function setupIndexCards() {
     document.querySelectorAll('.card-refino').forEach(card => {
@@ -144,17 +145,17 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-  const currentPath = window.location.pathname.replace('/', '');
-  const paginasValidas = ['index', 'pelego', 'tecido'];
+    const currentPath = window.location.pathname.replace('/', '');
+    const paginasValidas = ['index', 'pelego', 'tecido'];
 
-  if (paginasValidas.includes(currentPath)) {
-    window.navegarParaGlobal(currentPath);
-  } else {
-    window.navegarParaGlobal('index');
-  }
+    if (paginasValidas.includes(currentPath)) {
+        window.navegarParaGlobal(currentPath);
+    } else {
+        window.navegarParaGlobal('index');
+    }
 
-  setTimeout(() => {
-    const content = document.getElementById('contentWrapper');
-    if (content) content.style.opacity = '1';
-  }, 50);
+    setTimeout(() => {
+        const content = document.getElementById('contentWrapper');
+        if (content) content.style.opacity = '1';
+    }, 50);
 });
