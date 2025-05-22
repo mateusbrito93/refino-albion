@@ -1,11 +1,7 @@
-Options +FollowSymLinks
 RewriteEngine On
 RewriteBase /
 
-# Redireciona /index, /pelego, /tecido para os arquivos HTML corretos
+# Redireciona URLs amigáveis para index.html
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(index|pelego|tecido)$ $1.html [L]
-
-# Opcional: se quiser que qualquer outra URL inválida vá para index.html
-# RewriteRule ^ index.html [QSA,L]
+RewriteRule ^(index|pelego|tecido)$ index.html [L]

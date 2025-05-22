@@ -140,3 +140,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (content) content.style.opacity = '1';
     }, 50);
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const currentPath = window.location.pathname.replace('/', '');
+    const paginasValidas = ['index', 'pelego', 'tecido'];
+
+    if (paginasValidas.includes(currentPath)) {
+        navegarPara(currentPath);
+    } else {
+        navegarPara('index');
+    }
+});
