@@ -84,7 +84,8 @@ async function navegarPara(pageName) {
         // Exibe erro na tela ou carrega um conteúdo de erro personalizado se quiser
     }
 }
-window.navegarParaGlobal = navegarPara; // Expor globalmente
+// Expor globalmente a função navegarPara
+window.navegarParaGlobal = navegarPara;
 
 function setupIndexCards() {
     document.querySelectorAll('.card-refino').forEach(card => {
@@ -143,12 +144,17 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    const currentPath = window.location.pathname.replace('/', '');
-    const paginasValidas = ['index', 'pelego', 'tecido'];
+  const currentPath = window.location.pathname.replace('/', '');
+  const paginasValidas = ['index', 'pelego', 'tecido'];
 
-    if (paginasValidas.includes(currentPath)) {
-        navegarPara(currentPath);
-    } else {
-        navegarPara('index');
-    }
+  if (paginasValidas.includes(currentPath)) {
+    window.navegarParaGlobal(currentPath);
+  } else {
+    window.navegarParaGlobal('index');
+  }
+
+  setTimeout(() => {
+    const content = document.getElementById('contentWrapper');
+    if (content) content.style.opacity = '1';
+  }, 50);
 });

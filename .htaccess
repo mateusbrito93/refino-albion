@@ -1,9 +1,7 @@
 RewriteEngine On
 RewriteBase /
 
-# Permite acessar arquivos e diretórios normalmente
+# Redireciona tudo para index.html, exceto arquivos e diretórios existentes
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-
-# Redireciona tudo para index.html
 RewriteRule ^ index.html [L]
