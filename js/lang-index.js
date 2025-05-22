@@ -104,6 +104,11 @@ function updateLanguage(lang) {
   if (copyright) copyright.textContent = translation.copyright;
 }
 
+function rebuildForm(lang = 'pt') {
+  if (typeof buildFormWithLang === 'function') {
+    buildFormWithLang(formTranslations[lang]);
+  }
+}
 
 // Evento de clique nas bandeiras
 langButtons.forEach(btn => {
@@ -126,7 +131,5 @@ langButtons.forEach(btn => {
     });
 });
 
-// Chamada inicial para reconstruir formulário com idioma padrão (se a função existir)
-if (typeof rebuildForm === 'function') {
-    rebuildForm("pt");
-}
+// Chamada inicial para reconstruir formulário com idioma padrão
+rebuildForm("pt");
