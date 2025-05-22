@@ -70,19 +70,31 @@ async function calcular() {
             resCouroAtual.json()
         ]);
 
-        const pelegoData = dadosPelego.find(d => d.item_id === pelegoItem); // Renomeado para evitar conflito com o nome da tag HTML
-        const couroAnteriorData = couroAnteriorItem ? dadosCouroAnt?.find(d => d.item_id === couroAnteriorItem) : null; // Renomeado
-        const couroAtualData = dadosCouroAtual.find(d => d.item_id === couroAtualItem); // Renomeado
+        const pelegoData = dadosPelego.find(d => d.item_id === pelegoItem);
+        const couroAnteriorData = couroAnteriorItem ? dadosCouroAnt?.find(d => d.item_id === couroAnteriorItem) : null;
+        const couroAtualData = dadosCouroAtual.find(d => d.item_id === couroAtualItem);
 
-        // Validação de dados e preços (exemplo)
+        let errorMessage = '';
+        const encSuffixPelegoError = enc > 0 ? `_LEVEL${enc}_${enc}` : '';
+        const encSuffixCouroAntError = (tier - 1 >= 4 && enc > 0) ? `_LEVEL${enc}_${enc}` : '';
+        const encSuffixCouroAtualError = enc > 0 ? `_LEVEL${enc}_${enc}` : '';
+
         if (!pelegoData?.sell_price_min) {
-            document.getElementById("resultado").innerHTML = `<div class="bg-red-900 text-white p-4 rounded-lg"><p class="font-bold"><i class="fas fa-exclamation-triangle mr-2"></i>Erro</p><p class="mt-2">Preço não encontrado para ${pelegoItem} em ${cidadeCompra}.</p></div>`;
+            errorMessage += `<div class="flex items-center gap-3 mt-2"><img src="icons/T${tier}_HIDE${encSuffixPelegoError}.png" alt="Pelego" class="h-8 w-8"><span>Preço não encontrado para <strong>${pelegoItem}</strong> em ${cidadeCompra}</span></div>`;
+        }
+        if (tier > 2 && !couroAnteriorData?.sell_price_min) {
+            errorMessage += `<div class="flex items-center gap-3 mt-2"><img src="icons/T${tier - 1}_LEATHER${encSuffixCouroAntError}.png" alt="Couro Anterior" class="h-8 w-8"><span>Preço não encontrado para <strong>${couroAnteriorItem}</strong> em ${cidadeCompra}</span></div>`;
+        }
+        if (!couroAtualData?.sell_price_min) {
+            errorMessage += `<div class="flex items-center gap-3 mt-2"><img src="icons/T${tier}_LEATHER${encSuffixCouroAtualError}.png" alt="Couro Atual" class="h-8 w-8"><span>Preço não encontrado para <strong>${couroAtualItem}</strong> em ${cidadeVenda}</span></div>`;
+        }
+
+        if (errorMessage) {
+            document.getElementById("resultado").innerHTML = `<div class="bg-red-900 text-white p-4 rounded-lg"><p class="font-bold"><i class="fas fa-exclamation-triangle mr-2"></i>Erro ao buscar preços</p>${errorMessage}<button onclick="calcular()" class="mt-4 bg-red-700 hover:bg-red-600 text-white px-4 py-2 rounded-lg"><i class="fas fa-sync-alt mr-2"></i>Tentar novamente</button></div>`;
             finalizarBarraProgresso();
             scrollParaResultados();
             return;
         }
-        // Adicionar mais validações para couroAnteriorData e couroAtualData se necessário...
-
 
         const precoPelego = pelegoData.sell_price_min;
         const precoCouro = couroAnteriorData?.sell_price_min || 0;
@@ -171,7 +183,7 @@ async function calcular() {
     } catch (err) {
         console.error("Erro detalhado:", { cidades: { compra: cidadeCompra, venda: cidadeVenda }, urls: { urlPelego, urlCouroAnterior, urlCouroAtual }, error: err.message });
         document.getElementById("resultado").innerHTML = `<div class="bg-red-900 text-white p-4 rounded-lg"><p class="font-bold"><i class="fas fa-exclamation-triangle mr-2"></i>Erro ao calcular</p><p class="mt-2">${err.message}</p><p class="mt-2 text-sm">Itens buscados:</p><ul class="text-sm mt-1"><li>${pelegoItem}</li>${couroAnteriorItem ? `<li>${couroAnteriorItem}</li>` : ''}<li>${couroAtualItem}</li></ul><button onclick="calcular()" class="mt-4 bg-red-700 hover:bg-red-600 text-white px-4 py-2 rounded-lg"><i class="fas fa-sync-alt mr-2"></i>Tentar novamente</button></div>`;
-        finalizarBarraProgresso(); // Certifique-se que a barra finalize mesmo em erro
+        finalizarBarraProgresso();
         scrollParaResultados();
     }
 }
@@ -209,7 +221,8 @@ async function calcularall() {
             const couroAtualData = dadosCouroAtual.find(d => d.item_id === couroAtualItem);
 
             if (!pelegoData?.sell_price_min || !couroAtualData?.sell_price_min || (tier > 2 && !couroAnteriorData?.sell_price_min)) {
-                console.warn(`Dados de preço não encontrados para T${tier}, pulando.`);
+                console.warn(`Dados de preço não encontrados para T${tier} em calcularall, pulando.`);
+                resultadosHTML += `<tr><td class="px-4 py-2 font-bold">T${tier}</td><td colspan="10" class="px-4 py-2 text-center text-orange-500">Dados de preço indisponíveis</td></tr>`;
                 continue;
             }
 
@@ -230,8 +243,7 @@ async function calcularall() {
             const rentabilidade = custoTotal > 0 ? ((lucro / custoTotal) * 100).toFixed(2) : "0.00";
             resultadosHTML += `<tr><td class="px-4 py-2 font-bold">T${tier}</td><td class="px-4 py-2">${totalPelego} x $${formatarValor(precoPelego)}</td><td class="px-4 py-2">${tier > 2 ? totalCouroAnterior + ' x $' + formatarValor(precoCouro) : '-'}</td><td class="px-4 py-2">${quantidade} x $${formatarValor(precoVenda)}</td><td class="px-4 py-2">${totalPelego + (tier > 2 ? totalCouroAnterior : 0)}</td><td class="px-4 py-2">${Math.floor(courosRetornados)}</td><td class="px-4 py-2">${producaoTotal.toFixed(2)}</td><td class="px-4 py-2">$${formatarValor(custoTotal)}</td><td class="px-4 py-2">$${formatarValor(receita)}</td><td class="px-4 py-2 ${lucro >= 0 ? 'text-green-500' : 'text-red-500'}">$${formatarValor(lucro)}</td><td class="px-4 py-2 ${rentabilidade >= 0 ? 'text-green-500' : 'text-red-500'}">${rentabilidade}%</td></tr>`;
         } catch (error) {
-            console.error(`Erro ao calcular para T${tier}:`, error);
-            // Opcionalmente, adicionar uma linha na tabela indicando o erro para este tier.
+            console.error(`Erro ao calcular para T${tier} em calcularall:`, error);
             resultadosHTML += `<tr><td class="px-4 py-2 font-bold">T${tier}</td><td colspan="10" class="px-4 py-2 text-center text-red-500">Erro ao buscar dados</td></tr>`;
         }
     }

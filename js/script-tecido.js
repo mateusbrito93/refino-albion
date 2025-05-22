@@ -70,17 +70,31 @@ async function calcular() {
             resTecidoAtual.json()
         ]);
 
-        const fibraData = dadosFibra.find(d => d.item_id === fibraItem); // Renomeado
-        const tecidoAnteriorData = tecidoAnteriorItem ? dadosTecidoAnt?.find(d => d.item_id === tecidoAnteriorItem) : null; // Renomeado
-        const tecidoAtualData = dadosTecidoAtual.find(d => d.item_id === tecidoAtualItem); // Renomeado
+        const fibraData = dadosFibra.find(d => d.item_id === fibraItem);
+        const tecidoAnteriorData = tecidoAnteriorItem ? dadosTecidoAnt?.find(d => d.item_id === tecidoAnteriorItem) : null;
+        const tecidoAtualData = dadosTecidoAtual.find(d => d.item_id === tecidoAtualItem);
+
+        let errorMessage = '';
+        const encSuffixFibraError = enc > 0 ? `_LEVEL${enc}_${enc}` : '';
+        const encSuffixTecidoAntError = (tier - 1 >= 4 && enc > 0) ? `_LEVEL${enc}_${enc}` : '';
+        const encSuffixTecidoAtualError = enc > 0 ? `_LEVEL${enc}_${enc}` : '';
 
         if (!fibraData?.sell_price_min) {
-            document.getElementById("resultado").innerHTML = `<div class="bg-red-900 text-white p-4 rounded-lg"><p class="font-bold"><i class="fas fa-exclamation-triangle mr-2"></i>Erro</p><p class="mt-2">Preço não encontrado para ${fibraItem} em ${cidadeCompra}.</p></div>`;
+            errorMessage += `<div class="flex items-center gap-3 mt-2"><img src="icons/T${tier}_FIBER${encSuffixFibraError}.png" alt="Fibra" class="h-8 w-8"><span>Preço não encontrado para <strong>${fibraItem}</strong> em ${cidadeCompra}</span></div>`;
+        }
+        if (tier > 2 && !tecidoAnteriorData?.sell_price_min) {
+            errorMessage += `<div class="flex items-center gap-3 mt-2"><img src="icons/T${tier - 1}_CLOTH${encSuffixTecidoAntError}.png" alt="Tecido Anterior" class="h-8 w-8"><span>Preço não encontrado para <strong>${tecidoAnteriorItem}</strong> em ${cidadeCompra}</span></div>`;
+        }
+        if (!tecidoAtualData?.sell_price_min) {
+            errorMessage += `<div class="flex items-center gap-3 mt-2"><img src="icons/T${tier}_CLOTH${encSuffixTecidoAtualError}.png" alt="Tecido Atual" class="h-8 w-8"><span>Preço não encontrado para <strong>${tecidoAtualItem}</strong> em ${cidadeVenda}</span></div>`;
+        }
+
+        if (errorMessage) {
+            document.getElementById("resultado").innerHTML = `<div class="bg-red-900 text-white p-4 rounded-lg"><p class="font-bold"><i class="fas fa-exclamation-triangle mr-2"></i>Erro ao buscar preços</p>${errorMessage}<button onclick="calcular()" class="mt-4 bg-red-700 hover:bg-red-600 text-white px-4 py-2 rounded-lg"><i class="fas fa-sync-alt mr-2"></i>Tentar novamente</button></div>`;
             finalizarBarraProgresso();
             scrollParaResultados();
             return;
         }
-        // Adicionar mais validações para tecidoAnteriorData e tecidoAtualData se necessário...
 
         const precoFibra = fibraData.sell_price_min;
         const precoTecido = tecidoAnteriorData?.sell_price_min || 0;
@@ -169,7 +183,7 @@ async function calcular() {
     } catch (err) {
         console.error("Erro detalhado:", { cidades: { compra: cidadeCompra, venda: cidadeVenda }, urls: { urlFibra, urlTecidoAnterior, urlTecidoAtual }, error: err.message });
         document.getElementById("resultado").innerHTML = `<div class="bg-red-900 text-white p-4 rounded-lg"><p class="font-bold"><i class="fas fa-exclamation-triangle mr-2"></i>Erro ao calcular</p><p class="mt-2">${err.message}</p><p class="mt-2 text-sm">Itens buscados:</p><ul class="text-sm mt-1"><li>${fibraItem}</li>${tecidoAnteriorItem ? `<li>${tecidoAnteriorItem}</li>` : ''}<li>${tecidoAtualItem}</li></ul><button onclick="calcular()" class="mt-4 bg-red-700 hover:bg-red-600 text-white px-4 py-2 rounded-lg"><i class="fas fa-sync-alt mr-2"></i>Tentar novamente</button></div>`;
-        finalizarBarraProgresso(); // Certifique-se que a barra finalize mesmo em erro
+        finalizarBarraProgresso();
         scrollParaResultados();
     }
 }
@@ -207,7 +221,8 @@ async function calcularall() {
             const tecidoAtualData = dadosTecidoAtual.find(d => d.item_id === tecidoAtualItem);
 
             if (!fibraData?.sell_price_min || !tecidoAtualData?.sell_price_min || (tier > 2 && !tecidoAnteriorData?.sell_price_min)) {
-                console.warn(`Dados de preço não encontrados para T${tier}, pulando.`);
+                console.warn(`Dados de preço não encontrados para T${tier} em calcularall, pulando.`);
+                resultadosHTML += `<tr><td class="px-4 py-2 font-bold">T${tier}</td><td colspan="10" class="px-4 py-2 text-center text-orange-500">Dados de preço indisponíveis</td></tr>`;
                 continue;
             }
 
@@ -228,7 +243,7 @@ async function calcularall() {
             const rentabilidade = custoTotal > 0 ? ((lucro / custoTotal) * 100).toFixed(2) : "0.00";
             resultadosHTML += `<tr><td class="px-4 py-2 font-bold">T${tier}</td><td class="px-4 py-2">${totalFibra} x $${formatarValor(precoFibra)}</td><td class="px-4 py-2">${tier > 2 ? totalTecidoAnterior + ' x $' + formatarValor(precoTecido) : '-'}</td><td class="px-4 py-2">${quantidade} x $${formatarValor(precoVenda)}</td><td class="px-4 py-2">${totalFibra + (tier > 2 ? totalTecidoAnterior : 0)}</td><td class="px-4 py-2">${Math.floor(tecidosRetornados)}</td><td class="px-4 py-2">${producaoTotal.toFixed(2)}</td><td class="px-4 py-2">$${formatarValor(custoTotal)}</td><td class="px-4 py-2">$${formatarValor(receita)}</td><td class="px-4 py-2 ${lucro >= 0 ? 'text-green-500' : 'text-red-500'}">$${formatarValor(lucro)}</td><td class="px-4 py-2 ${rentabilidade >= 0 ? 'text-green-500' : 'text-red-500'}">${rentabilidade}%</td></tr>`;
         } catch (error) {
-            console.error(`Erro ao calcular para T${tier}:`, error);
+            console.error(`Erro ao calcular para T${tier} em calcularall:`, error);
             resultadosHTML += `<tr><td class="px-4 py-2 font-bold">T${tier}</td><td colspan="10" class="px-4 py-2 text-center text-red-500">Erro ao buscar dados</td></tr>`;
         }
     }
