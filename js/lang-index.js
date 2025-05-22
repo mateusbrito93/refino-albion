@@ -126,5 +126,7 @@ langButtons.forEach(btn => {
     });
 });
 
-// Chamada inicial para reconstruir formulário com idioma padrão
-rebuildForm("pt");
+// Chamada inicial para reconstruir formulário com idioma padrão (se a função existir)
+if (typeof rebuildForm === 'function') {
+    rebuildForm("pt");
+}
