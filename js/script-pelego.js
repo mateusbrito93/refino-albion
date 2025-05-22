@@ -503,7 +503,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Anima a entrada do conteúdo
     setTimeout(() => {
         const wrapper = document.getElementById('contentWrapper');
-        if (wrapper) wrapper.style.opacity = '1';
+        if (wrapper) wrapper.style.opacity = '1'; // Garante que o conteúdo apareça
     }, 50);
 
     // Modifique todos os links para usar o sistema de transição
@@ -518,81 +518,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Função para inicializar a página
-function inicializarPagina() {
-    // Inicializa todos os componentes necessários
-    const content = document.getElementById('contentWrapper');
-    if (content) content.style.opacity = '1';
-
-    // Configura o botão voltar
-    const btnVoltar = document.querySelector('button[onclick*="index.html"]');
-    if (btnVoltar) {
-        btnVoltar.onclick = (e) => {
-            e.preventDefault();
-            navegarPara('index.html');
-        };
-    }
-
-    // Inicializa outros componentes da página conforme necessário
-    if (typeof iniciarBarraProgresso === 'function') {
-        iniciarBarraProgresso();
-    }
-    if (typeof calcular === 'function') {
-        // Inicializa a calculadora se necessário
-    }
-}
-
-// Se a página foi carregada diretamente
-if (!window.history.state || window.history.state.directLoad) {
-    document.addEventListener('DOMContentLoaded', inicializarPagina);
-} else {
-    // Se foi carregada via SPA
-    inicializarPagina();
-}
-
 // Função de navegação compatível com o index
-async function navegarPara(url) {
-    const transition = document.getElementById('pageTransition');
-    const content = document.getElementById('contentWrapper');
-
-    if (content) content.style.opacity = '0';
-    if (transition) transition.classList.add('active');
-
-    try {
-        await new Promise(resolve => setTimeout(resolve, 300));
-
-        if (url === 'index.html') {
-            window.location.href = url;
-        } else {
-            const response = await fetch(url);
-            const html = await response.text();
-            document.body.innerHTML = html;
-            window.history.pushState({}, '', url);
-        }
-    } catch (error) {
-        console.error('Erro na navegação:', error);
-        window.location.href = url;
+function irParaIndex() {
+    if (window.navegarParaGlobal) {
+        window.navegarParaGlobal('index');
+    } else {
+        console.error("Função de navegação global não encontrada. Recorrendo ao link direto.");
+        window.location.href = '/index'; // Fallback
     }
-}
-
-// Evento para o botão voltar
-document.addEventListener('DOMContentLoaded', () => {
-    // Garante que o conteúdo fique visível ao carregar
-    setTimeout(() => {
-        const content = document.getElementById('contentWrapper');
-        if (content) content.style.opacity = '1';
-    }, 50);
-
-    // Configura o botão voltar
-    const btnVoltar = document.querySelector('button[onclick="navegarPara(\'index.html\')"]');
-    if (btnVoltar) {
-        btnVoltar.onclick = () => navegarPara('index.html');
-    }
-});
-
-// Função específica para voltar à home
-function voltarParaHome() {
-    navegarPara('index.html');
 }
 
 // Atualize o evento popstate

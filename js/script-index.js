@@ -1,78 +1,139 @@
-async function navegarPara(url) {
+// No início do arquivo js/script-index.js ou onde 'navegarPara' é definida
+async function navegarPara(pageName) {
     const transition = document.getElementById('pageTransition');
     const content = document.getElementById('contentWrapper');
 
-    // Animação de saída
     if (content) content.style.opacity = '0';
     if (transition) transition.classList.add('active');
 
     try {
         await new Promise(resolve => setTimeout(resolve, 300));
 
-        // Carrega a nova página
-        const response = await fetch(url);
+        const fetchUrl = `${pageName}.html`; // Constrói o nome do arquivo .html
+
+        const response = await fetch(fetchUrl);
+        if (!response.ok) {
+            throw new Error(`Falha ao carregar a página ${fetchUrl}: ${response.status} ${response.statusText}`);
+        }
         const html = await response.text();
 
-        // Cria um elemento temporário para parsear o HTML
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = html;
 
-        // Extrai o conteúdo do body
-        const newContent = tempDiv.querySelector('body').innerHTML;
+        const newBodyContent = tempDiv.querySelector('body')?.innerHTML;
+        if (!newBodyContent) {
+            throw new Error(`Não foi possível encontrar o conteúdo do body em ${fetchUrl}`);
+        }
 
-        // Substitui o conteúdo mantendo a estrutura base
-        document.body.innerHTML = `
-            <div id="pageTransition" class="page-transition">
-                <span class="loader"></span>
-            </div>
-            <div id="contentWrapper" class="content-wrapper" style="opacity:0">
-                ${newContent}
-            </div>
-        `;
+        const pageTransitionDivPreserved = document.getElementById('pageTransition'); // Salva o nó da transição
+
+        document.body.innerHTML = ''; // Limpa o body
+        if (pageTransitionDivPreserved) {
+            document.body.appendChild(pageTransitionDivPreserved); // Reanexa o nó de transição
+        }
+
+        const newContentWrapper = document.createElement('div');
+        newContentWrapper.id = 'contentWrapper';
+        newContentWrapper.className = 'content-wrapper';
+        newContentWrapper.style.opacity = '0'; // Começa invisível para fade-in
+        newContentWrapper.innerHTML = newBodyContent;
+        document.body.appendChild(newContentWrapper);
 
         // Recarrega os scripts dinamicamente
         const scripts = tempDiv.querySelectorAll('script');
+        const scriptPromises = [];
         scripts.forEach(script => {
             const newScript = document.createElement('script');
             if (script.src) {
-                newScript.src = script.src;
+                newScript.src = script.src; // Mantém o src original
             } else {
                 newScript.textContent = script.textContent;
             }
             document.body.appendChild(newScript);
         });
 
-        // Atualiza a URL
-        window.history.pushState({}, '', url);
+        // await Promise.all(scriptPromises); // Espera scripts externos se necessário
 
-        // Animação de entrada
+        window.history.pushState({ page: pageName }, '', `/${pageName}`); // Atualiza URL sem .html
+
         setTimeout(() => {
-            const newContentWrapper = document.getElementById('contentWrapper');
-            if (newContentWrapper) newContentWrapper.style.opacity = '1';
-            document.getElementById('pageTransition').classList.remove('active');
+            const freshContentWrapper = document.getElementById('contentWrapper');
+            if (freshContentWrapper) freshContentWrapper.style.opacity = '1';
+
+            const pt = document.getElementById('pageTransition'); // Pega o nó de transição novamente (pode ter sido recriado)
+            if (pt) pt.classList.remove('active');
+
+            // Re-executar inicializações específicas da página se necessário, ex: tradução
+            if (typeof updateLanguage === "function" && typeof translations === "object" && pageName === "index") {
+                const lang = localStorage.getItem("lang") || "pt";
+                updateLanguage(lang);
+            }
+            if (typeof rebuildForm === "function" && typeof formTranslations === "object" && pageName === "index") {
+                const lang = localStorage.getItem("lang") || "pt";
+                rebuildForm(lang); // Para reconstruir o formulário se estiver na página de índice e for necessário
+            }
+            if (pageName === 'index') {
+                setupIndexCards();
+            }
+
         }, 50);
 
     } catch (error) {
         console.error('Erro ao carregar a página:', error);
-        window.location.href = url;
+        window.location.href = `/${pageName}`; // Fallback para carregamento completo
+    }
+}
+window.navegarParaGlobal = navegarPara; // Expor globalmente
+
+function setupIndexCards() {
+    document.querySelectorAll('.card-refino').forEach(card => {
+        const onclickAttr = card.getAttribute('onclick');
+        if (onclickAttr) {
+            const match = onclickAttr.match(/redirecionar\('([^']+)'\)/);
+            if (match && match[1]) {
+                const tipo = match[1];
+                if (tipo !== '#') {
+                    card.onclick = (e) => {
+                        e.preventDefault();
+                        window.navegarParaGlobal(tipo);
+                    };
+                } else {
+                    card.onclick = (e) => {
+                        e.preventDefault();
+                        console.warn("Navegação para '#' não configurada.");
+                    };
+                }
+            }
+        }
+    });
+}
+
+// A função redirecionar em index.html chama esta configuração:
+function redirecionar(tipo) {
+    if (tipo && tipo !== '#') {
+        window.navegarParaGlobal(tipo);
+    } else {
+        console.warn("Tentativa de redirecionar para '#' ou tipo inválido.");
     }
 }
 
-// Configura os cards de refino
-document.querySelectorAll('.card-refino').forEach(card => {
-    const tipo = card.getAttribute('onclick').match(/'([^']+)'/)[1];
-    card.onclick = (e) => {
-        e.preventDefault();
-        navegarPara(`${tipo}.html`);
-    };
+// Garante que os cards sejam configurados na carga inicial da página index.
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupIndexCards);
+} else {
+    setupIndexCards(); // Já carregado
+}
+
+window.addEventListener('popstate', function (event) {
+    if (event.state && event.state.page) {
+        // window.navegarParaGlobal(event.state.page);
+        window.location.reload(); // A abordagem atual de recarregar
+    } else {
+        window.location.reload();
+    }
 });
 
-// Configura o histórico
-window.addEventListener('popstate', function () {
-    window.location.reload();
-});
-
-// Inicialização da página
+// Inicialização da página (fade-in)
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         const content = document.getElementById('contentWrapper');

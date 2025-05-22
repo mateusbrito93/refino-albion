@@ -1,13 +1,20 @@
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteBase /refino/
-    
-    # Remove trailing slash (opcional)
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)/$ /refino/$1 [R=301,L]
-    
-    # Redireciona todas as requisições para index.html
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^ index.html [L]
-</IfModule>
+RewriteEngine On
+
+# Redireciona a raiz (/) para /index
+RewriteRule ^$ /index [R=301,L]
+
+# Trata /index para servir index.php (que por sua vez serve index.html)
+RewriteRule ^index/?$ index.php [L]
+
+# Remove a extensão .html de outras requisições
+# Verifica se o arquivo .html correspondente existe
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+RewriteRule ^([^/]+)/?$ $1.html [L]
+
+# Se não for .html, e for index, serve index.php (caso a regra anterior para index não pegue)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{DOCUMENT_ROOT}/$1.php -f
+RewriteRule ^([^/]+)/?$ $1.php [L]
