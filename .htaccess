@@ -1,7 +1,7 @@
 RewriteEngine On
 RewriteBase /
 
-# Redireciona URLs amigáveis para index.html
+# Se o arquivo ou diretório não existir, redireciona tudo para index.html
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(index|pelego|tecido)$ index.html [L]
+RewriteRule ^ index.html [L]
