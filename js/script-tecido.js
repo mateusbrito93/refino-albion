@@ -345,3 +345,5 @@ document.addEventListener("DOMContentLoaded", () => {
 window.addEventListener('popstate', function () {
     window.location.reload();
 });
+
+window.irParaIndex = irParaIndex;
