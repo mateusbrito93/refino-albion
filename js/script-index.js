@@ -12,7 +12,7 @@ async function navegarPara(pageName) {
     try {
         await new Promise(resolve => setTimeout(resolve, 300));
 
-        const fetchUrl = `${pageName}.html`; // Constrói o nome do arquivo .html
+        const fetchUrl = `${pageName}`;
 
         const response = await fetch(fetchUrl);
         if (!response.ok) {

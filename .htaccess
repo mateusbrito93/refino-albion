@@ -1,7 +1,16 @@
 RewriteEngine On
 RewriteBase /
 
-# Redireciona tudo para index.html, exceto arquivos e diretórios existentes
+# Redirecionar URLs terminando em .html para versão sem extensão
+RewriteCond %{THE_REQUEST} \s/+(.*?)\.html[\s?] [NC]
+RewriteRule ^ /%1 [R=301,L,NE]
+
+# Servir o arquivo .html correspondente quando a URL sem extensão for acessada
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.html -f
+RewriteRule ^(.*)$ $1.html [L]
+
+# Redirecionar outras requisições para index.html se não for um arquivo ou diretório existente
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.html [L]
