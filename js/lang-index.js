@@ -126,7 +126,7 @@ langButtons.forEach(btn => {
     });
 });
 
-// Chamada inicial para reconstruir formulário com idioma padrão (se a função existir)
-if (typeof rebuildForm === 'function') {
-    rebuildForm("pt");
+// Define a função vazia se não existir (para evitar erros)
+if (typeof rebuildForm === 'undefined') {
+    window.rebuildForm = function() {};
 }
