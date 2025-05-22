@@ -346,10 +346,4 @@ window.addEventListener('popstate', function () {
     window.location.reload();
 });
 
-window.irParaIndex = function () {
-  if (window.navegarParaGlobal) {
-    window.navegarParaGlobal('index');
-  } else {
-    window.location.href = '/index';
-  }
-};
+window.irParaIndex = irParaIndex;
