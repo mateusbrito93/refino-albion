@@ -1,21 +1,11 @@
+Options +FollowSymLinks
 RewriteEngine On
+RewriteBase /
 
-# Redireciona a raiz (/) para /index
-RewriteRule ^$ /index [R=301,L]
-
-# Trata /index para servir index.php (que por sua vez serve index.html)
-RewriteRule ^index/?$ index.php [L]
-
-# Remove a extensão .html de outras requisições
-# Verifica se o arquivo .html correspondente existe
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{DOCUMENT_ROOT}/$1.html -f
-RewriteRule ^([^/]+)/?$ $1.html [L]
-
-# Se não for .html, e for index, serve index.php (caso a regra anterior para index não pegue)
-# Esta regra pode ser redundante se a de cima para /index/?$ já funciona bem.
+# Redireciona /index, /pelego, /tecido para os arquivos HTML corretos
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{DOCUMENT_ROOT}/$1.php -f
-RewriteRule ^([^/]+)/?$ $1.php [L]
+RewriteRule ^(index|pelego|tecido)$ $1.html [L]
+
+# Opcional: se quiser que qualquer outra URL inválida vá para index.html
+# RewriteRule ^ index.html [QSA,L]
