@@ -12,7 +12,8 @@ async function navegarPara(pageName) {
     try {
         await new Promise(resolve => setTimeout(resolve, 300));
 
-        const fetchUrl = `${pageName}`;
+        const fetchUrl = `${pageName}.html`;
+
 
         const response = await fetch(fetchUrl);
         if (!response.ok) {
