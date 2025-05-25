@@ -10,7 +10,7 @@ async function navegarPara(pageName) {
     try {
         await new Promise(resolve => setTimeout(resolve, 300));
 
-        const fetchUrl = `${pageName}.html`; // Adiciona .html, mas mantém URL limpa
+        const fetchUrl = `${pageName}.html`;
         console.log("Carregando:", fetchUrl);
 
         const response = await fetch(fetchUrl);
@@ -22,24 +22,32 @@ async function navegarPara(pageName) {
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = html;
 
-        const newContentWrapperElement = tempDiv.querySelector('#contentWrapper') || tempDiv.querySelector('body');
-        if (!newContentWrapperElement) {
+        // Verifica se existe #contentWrapper ou usa o body inteiro
+        const newContent = tempDiv.querySelector('#contentWrapper') || tempDiv.querySelector('body');
+        if (!newContent) {
             throw new Error(`Não foi possível encontrar o conteúdo em ${fetchUrl}`);
         }
 
         const pageTransitionDivPreserved = document.getElementById('pageTransition');
+        document.body.innerHTML = ''; // Limpa o body atual
 
-        document.body.innerHTML = '';
         if (pageTransitionDivPreserved) {
             document.body.appendChild(pageTransitionDivPreserved);
         }
 
-        const newContentWrapper = document.createElement('div');
-        newContentWrapper.id = 'contentWrapper';
-        newContentWrapper.className = 'content-wrapper';
-        newContentWrapper.style.opacity = '0';
-        newContentWrapper.innerHTML = newContentWrapperElement.innerHTML;
-        document.body.appendChild(newContentWrapper);
+        // Se a página for 'index', substitui todo o body
+        if (pageName === 'index') {
+            document.body.innerHTML = html;
+        }
+        // Caso contrário, usa o #contentWrapper ou o body do novo HTML
+        else {
+            const newContentWrapper = document.createElement('div');
+            newContentWrapper.id = 'contentWrapper';
+            newContentWrapper.className = 'content-wrapper';
+            newContentWrapper.style.opacity = '0';
+            newContentWrapper.innerHTML = newContent.innerHTML;
+            document.body.appendChild(newContentWrapper);
+        }
 
         // Recarrega scripts dinamicamente
         const scripts = tempDiv.querySelectorAll('script');
@@ -72,11 +80,12 @@ async function navegarPara(pageName) {
             if (pageName === 'index') {
                 setupIndexCards();
             }
-
         }, 50);
 
     } catch (error) {
         console.error('Erro ao carregar a página:', error.message, error.stack);
+        // Fallback: recarrega a página se a navegação SPA falhar
+        window.location.href = fetchUrl;
     }
 }
 
