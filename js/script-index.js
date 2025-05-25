@@ -12,8 +12,9 @@ async function navegarPara(pageName) {
     try {
         await new Promise(resolve => setTimeout(resolve, 300));
 
-        const fetchUrl = `${pageName}.html`;
+        const fetchUrl = `${pageName}.html`;  // Usa .html mas mantém URL limpa
 
+        console.log("Tentando carregar:", fetchUrl);
 
         const response = await fetch(fetchUrl);
         if (!response.ok) {
@@ -21,13 +22,17 @@ async function navegarPara(pageName) {
         }
         const html = await response.text();
 
+        console.log("HTML recebido:", html);
+
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = html;
 
-        const newBodyContent = tempDiv.querySelector('body')?.innerHTML;
-        if (!newBodyContent) {
-            throw new Error(`Não foi possível encontrar o conteúdo do body em ${fetchUrl}`);
+        const newMainContent = tempDiv.querySelector('main');
+        if (!newMainContent) {
+            throw new Error(`Não foi possível encontrar a tag <main> em ${fetchUrl}`);
         }
+        newContentWrapper.innerHTML = newMainContent.outerHTML;
+
 
         const pageTransitionDivPreserved = document.getElementById('pageTransition'); // Salva o nó da transição
 
