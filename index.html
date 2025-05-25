@@ -111,6 +111,15 @@
     </div>
   </footer>
 
+  <script>
+    function initPage() {
+      // Inicializações específicas da página
+      if (typeof setupIndexCards === 'function') setupIndexCards();
+      if (typeof updateLanguage === 'function') updateLanguage(localStorage.getItem("lang") || "pt");
+    }
+    document.addEventListener('DOMContentLoaded', initPage);
+  </script>
+
   <script src="js/script-index.js" defer></script>
   <script src="js/lang-index.js" defer></script>
 
