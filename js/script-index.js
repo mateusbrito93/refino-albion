@@ -1,61 +1,60 @@
-window.navegarParaGlobal = navegarPara;
-
-async function navegarPara(pageName) {
-    // Se já estiver na página solicitada, não faz nada
-    if (window.location.pathname === `/${pageName}`) return;
-
+async function navegarPara(url) {
     const transition = document.getElementById('pageTransition');
+    const content = document.getElementById('contentWrapper');
+
+    // Animação de saída
+    if (content) content.style.opacity = '0';
     if (transition) transition.classList.add('active');
 
     try {
-        // 1. Faz a requisição da página
-        const response = await fetch(`${pageName}.html`);
-        if (!response.ok) throw new Error(`Erro ${response.status}`);
+        await new Promise(resolve => setTimeout(resolve, 300));
 
-        // 2. Obtém o conteúdo HTML
+        // Carrega a nova página
+        const response = await fetch(url);
         const html = await response.text();
 
-        // 3. Cria um elemento temporário para parsear o HTML
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
+        // Cria um elemento temporário para parsear o HTML
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = html;
 
-        // 4. Verifica se o conteúdo existe
-        if (!doc.body || !doc.body.innerHTML) {
-            throw new Error('Conteúdo HTML inválido');
-        }
+        // Extrai o conteúdo do body
+        const newContent = tempDiv.querySelector('body').innerHTML;
 
-        // 5. Substitui todo o conteúdo do body
-        document.body.innerHTML = doc.body.innerHTML;
+        // Substitui o conteúdo mantendo a estrutura base
+        document.body.innerHTML = `
+            <div id="pageTransition" class="page-transition">
+                <span class="loader"></span>
+            </div>
+            <div id="contentWrapper" class="content-wrapper" style="opacity:0">
+                ${newContent}
+            </div>
+        `;
 
-        // 6. Recarrega os scripts dinamicamente
-        const scripts = Array.from(document.scripts);
-        scripts.forEach(oldScript => {
+        // Recarrega os scripts dinamicamente
+        const scripts = tempDiv.querySelectorAll('script');
+        scripts.forEach(script => {
             const newScript = document.createElement('script');
-            if (oldScript.src) {
-                newScript.src = oldScript.src + '?v=' + Date.now(); // Cache busting
+            if (script.src) {
+                newScript.src = script.src;
             } else {
-                newScript.textContent = oldScript.textContent;
+                newScript.textContent = script.textContent;
             }
             document.body.appendChild(newScript);
         });
 
-        // 7. Atualiza o histórico
-        window.history.pushState({ page: pageName }, '', `/${pageName}`);
+        // Atualiza a URL
+        window.history.pushState({}, '', url);
 
-        // 8. Finaliza a transição
+        // Animação de entrada
         setTimeout(() => {
-            if (transition) transition.classList.remove('active');
-
-            // Dispara eventos de inicialização
-            if (typeof initPage === 'function') {
-                initPage();
-            }
-        }, 300);
+            const newContentWrapper = document.getElementById('contentWrapper');
+            if (newContentWrapper) newContentWrapper.style.opacity = '1';
+            document.getElementById('pageTransition').classList.remove('active');
+        }, 50);
 
     } catch (error) {
-        console.error('Erro na navegação:', error);
-        // Fallback: recarrega a página tradicionalmente
-        window.location.href = `${pageName}.html`;
+        console.error('Erro ao carregar a página:', error);
+        window.location.href = url;
     }
 }
 
