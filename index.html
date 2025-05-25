@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="css/style2.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon.png">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 
 <body class="p-6 font-sans min-h-screen bg-gray-900 text-white">
@@ -110,29 +109,6 @@
       </p>
     </div>
   </footer>
-
-  <script>
-    // Função de inicialização global
-    function initPage() {
-      // Inicializa componentes específicos da página
-      if (typeof setupIndexCards === 'function') {
-        setupIndexCards();
-      }
-
-      // Atualiza idioma
-      if (typeof updateLanguage === 'function') {
-        updateLanguage(localStorage.getItem("lang") || "pt");
-      }
-
-      // Rebuild forms se necessário
-      if (typeof rebuildForm === 'function') {
-        rebuildForm(localStorage.getItem("lang") || "pt");
-      }
-    }
-
-    // Dispara quando o DOM estiver pronto
-    document.addEventListener('DOMContentLoaded', initPage);
-  </script>
 
   <script src="js/script-index.js" defer></script>
   <script src="js/lang-index.js" defer></script>

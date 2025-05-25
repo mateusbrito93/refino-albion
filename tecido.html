@@ -77,28 +77,6 @@
             </p>
         </div>
     </footer>
-    <script>
-    // Função de inicialização global
-    function initPage() {
-      // Inicializa componentes específicos da página
-      if (typeof setupIndexCards === 'function') {
-        setupIndexCards();
-      }
-
-      // Atualiza idioma
-      if (typeof updateLanguage === 'function') {
-        updateLanguage(localStorage.getItem("lang") || "pt");
-      }
-
-      // Rebuild forms se necessário
-      if (typeof rebuildForm === 'function') {
-        rebuildForm(localStorage.getItem("lang") || "pt");
-      }
-    }
-
-    // Dispara quando o DOM estiver pronto
-    document.addEventListener('DOMContentLoaded', initPage);
-  </script>
 
     <script src="js/lang-tecido.js"></script>
     <script src="js/script-index.js"></script>
