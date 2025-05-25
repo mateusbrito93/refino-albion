@@ -22,9 +22,9 @@ async function navegarPara(pageName) {
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = html;
 
-        const newContentWrapperElement = tempDiv.querySelector('#contentWrapper');
+        const newContentWrapperElement = tempDiv.querySelector('#contentWrapper') || tempDiv.querySelector('body');
         if (!newContentWrapperElement) {
-            throw new Error(`Não foi possível encontrar o conteúdo do #contentWrapper em ${fetchUrl}`);
+            throw new Error(`Não foi possível encontrar o conteúdo em ${fetchUrl}`);
         }
 
         const pageTransitionDivPreserved = document.getElementById('pageTransition');
