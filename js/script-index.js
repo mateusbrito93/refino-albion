@@ -1,7 +1,7 @@
-console.log ("check1");
 window.navegarParaGlobal = navegarPara;
 
 async function navegarPara(pageName) {
+    console.log ("check1");
     // Se já estiver na página solicitada, não faz nada
     if (window.location.pathname === `/${pageName}`) return;
 

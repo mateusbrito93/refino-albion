@@ -104,6 +104,12 @@ function updateLanguage(lang) {
   if (copyright) copyright.textContent = translation.copyright;
 }
 
+function rebuildForm(lang = 'pt') {
+    console.log ("check2");
+  if (typeof buildFormWithLang === 'function') {
+    buildFormWithLang(formTranslations[lang]);
+  }
+}
 
 // Evento de clique nas bandeiras
 langButtons.forEach(btn => {
