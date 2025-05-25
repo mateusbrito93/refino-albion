@@ -1,3 +1,4 @@
+console.log ("check1");
 window.navegarParaGlobal = navegarPara;
 
 async function navegarPara(pageName) {
