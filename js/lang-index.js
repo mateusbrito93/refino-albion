@@ -105,7 +105,6 @@ function updateLanguage(lang) {
 }
 
 function rebuildForm(lang = 'pt') {
-    console.log ("check2");
   if (typeof buildFormWithLang === 'function') {
     buildFormWithLang(formTranslations[lang]);
   }
